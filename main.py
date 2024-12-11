@@ -31,6 +31,7 @@ def load_data(batch_size):
 
 if __name__ == "__main__":
     exp_cfgs = os.listdir(EXPERIMENTS_ROOT)
+    print(exp_cfgs)
     for cfg_file_name in exp_cfgs:
         cfg_path = os.path.join(EXPERIMENTS_ROOT, cfg_file_name)
     
@@ -57,5 +58,6 @@ if __name__ == "__main__":
             logger.log(f"{key}: {value}")
         logger.log(f"{'-'*50}------------{'-'*50}")
 
+        trainer = Trainer(cfg, logger, train_dataloader, val_dataloader, test_dataloader)
         trainer.train()
         trainer.test_step()
