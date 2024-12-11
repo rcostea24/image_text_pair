@@ -2,7 +2,7 @@
     "exp_id": "let_it_empty",
     "batch_size": 64,
     "lr": 2e-4,
-    "epochs": 100,
+    "epochs": 50,
     "optimizer": "Adam",
     "loss_fn": "CrossEntropyLoss",
     "vision_params": {
