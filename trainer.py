@@ -4,7 +4,7 @@ import pandas as pd
 import torch
 import torch.nn as nn
 from model import Model
-from tqdm import tqdm
+from tqdm.notebook import tqdm
 import matplotlib.pyplot as plt
 
 class Trainer():
