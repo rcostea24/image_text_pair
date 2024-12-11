@@ -139,7 +139,7 @@ class Trainer():
                 correct_preds += torch.sum(predictions == labels).item()
                 total_preds += labels.shape[0]
 
-        self.logger.log(f"Validation accuracy with best model: ", correct_preds / total_preds)
+        self.logger.log(f"Validation accuracy with best model: {correct_preds / total_preds}")
 
     def plot(self):
         plt.plot(range(self.cfg["epochs"]), self.train_losses, label="train loss")
