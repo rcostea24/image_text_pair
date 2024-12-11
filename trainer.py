@@ -123,7 +123,7 @@ class Trainer():
                     
         predictions = np.array(predictions)          
         output_df["label"] = predictions
-        output_df.to_csv(f"submission/submission_{self.cfg["exp_id"]}.csv", index=False)
+        output_df.to_csv(f"submission/submission_{self.cfg['exp_id']}.csv", index=False)
         self.logger.log("Test results saved")
 
         correct_preds = 0.0
@@ -152,5 +152,5 @@ class Trainer():
         plt.plot(range(self.cfg["epochs"]), self.train_accs, label="train acc")
         plt.plot(range(self.cfg["epochs"]), self.val_accs, label="val acc")
         plt.title("Accuracy")
-        plt.savefig(f"figures/{self.cfg["exp_id"]}_accuracy.jpg")
+        plt.savefig(f"figures/{self.cfg['exp_id']}_accuracy.jpg")
         plt.close()
