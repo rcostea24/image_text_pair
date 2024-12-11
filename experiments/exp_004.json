@@ -1,6 +1,6 @@
 {
     "exp_id": "let_it_empty",
-    "batch_size": 32,
+    "batch_size": 64,
     "lr": 2e-4,
     "epochs": 100,
     "optimizer": "Adam",
