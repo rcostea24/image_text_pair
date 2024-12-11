@@ -146,7 +146,7 @@ class Trainer():
         plt.plot(range(self.cfg["epochs"]), self.val_losses, label="val loss")
         plt.legend()
         plt.title("Loss")
-        plt.savefig(f"figures/{self.cfg["exp_id"]}_loss.jpg")
+        plt.savefig(f"figures/{self.cfg['exp_id']}_loss.jpg")
         plt.close()
         
         plt.plot(range(self.cfg["epochs"]), self.train_accs, label="train acc")
