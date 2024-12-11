@@ -10,7 +10,7 @@ from model import Model
 from trainer import Trainer
 from dataloading import VocabSize
 
-DATA_ROOT_PATH = r"C:\Users\razva\Master1\An2\DL\isp-match-dl-2024"
+DATA_ROOT_PATH = "/kaggle/input/image-sentence-pair-matching"
 EXPERIMENTS_ROOT = r"experiments"
 
 def load_data(batch_size):
@@ -50,7 +50,7 @@ if __name__ == "__main__":
 
         classifier_params = cfg["classifier_params"]
 
-        logger = Logger(f"logs/log_{cfg["exp_id"]}.txt")
+        logger = Logger(f"logs/log_{cfg['exp_id']}.txt")
 
         logger.log(f"{'-'*50} Parameters {'-'*50}")
         for key, value in cfg.items():
