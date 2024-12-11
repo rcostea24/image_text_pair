@@ -65,5 +65,5 @@ if __name__ == "__main__":
         ).to(cfg["device"])
         trainer.best_model.load_state_dict(torch.load("saved_models/best_model_001.pt"))
 
-        # trainer.train()
+        trainer.train()
         trainer.test_step()
