@@ -1,0 +1,19 @@
+{
+    "exp_id": "let_it_empty",
+    "batch_size": 32,
+    "lr": 1e-3,
+    "epochs": 100,
+    "optimizer": "Adam",
+    "loss_fn": "CrossEntropyLoss",
+    "vision_params": {
+
+    },
+    "language_params": {
+        "vocab_size": -1, 
+        "embed_dim": 256,
+        "hidden_dim": 512
+    },
+    "classifier_params": {
+        "fc_size": [1024, 512, 256, 2]
+    }
+}
