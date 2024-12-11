@@ -116,10 +116,10 @@ class Trainer():
                             
         self.best_model.eval()
         with torch.no_grad():
-                for img_inputs, txt_input, labels in tqdm(self.test_loader):
-                    img_inputs, txt_input, labels = img_inputs.to(self.cfg["device"]), txt_input.to(self.cfg["device"]), labels.to(self.cfg["device"])
-                    outputs = self.best_model(img_inputs, txt_input)
-                    predictions.extend(list(torch.argmax(outputs, dim=1).cpu().numpy()))
+            for img_inputs, txt_input, labels in tqdm(self.test_loader):
+                img_inputs, txt_input, labels = img_inputs.to(self.cfg["device"]), txt_input.to(self.cfg["device"]), labels.to(self.cfg["device"])
+                outputs = self.best_model(img_inputs, txt_input)
+                predictions.extend(list(torch.argmax(outputs, dim=1).cpu().numpy()))
                     
         predictions = np.array(predictions)          
         output_df["label"] = predictions
