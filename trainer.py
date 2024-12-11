@@ -53,7 +53,7 @@ class Trainer():
             if val_step_acc > self.best_acc:
                 self.best_acc = val_step_acc
                 self.best_model = self.model
-                torch.save(self.best_model.state_dict(), f"saved_models/best_model_{self.cfg["exp_id"]}.pt")
+                torch.save(self.best_model.state_dict(), f"saved_models/best_model_{self.cfg['exp_id']}.pt")
                 self.logger.log("New model saved")
 
         self.plot()
