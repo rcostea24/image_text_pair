@@ -15,6 +15,7 @@
         "num_layers": 2
     },
     "classifier_params": {
-        "fc_size": [1024, 512, 256, 2]
+        "fc_size": [1024, 512, 256, 2],
+        "act": "ReLU"
     }
 }
