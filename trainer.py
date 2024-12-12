@@ -17,7 +17,6 @@ class Trainer():
 
         self.model = None
         self.best_acc = 0.0
-        self.best_model = None
 
         self.train_losses = []
         self.train_accs = []
@@ -55,8 +54,7 @@ class Trainer():
 
             if val_step_acc > self.best_acc:
                 self.best_acc = val_step_acc
-                self.best_model = self.model
-                torch.save(self.best_model.state_dict(), f"saved_models/best_model_{self.cfg['exp_id']}.pt")
+                torch.save(self.model.state_dict(), f"saved_models/best_model_{self.cfg['exp_id']}.pt")
                 self.logger.log("New model saved")
 
         self.plot()
@@ -118,16 +116,21 @@ class Trainer():
         predictions = []
                             
         best_model_path = f"saved_models/best_model_{self.cfg['exp_id']}.pt"
-        self.best_model.load_state_dict(torch.load(best_model_path))
-        self.best_model.eval()
+        best_model = Model(
+            self.cfg["vision_params"], 
+            self.cfg["language_params"], 
+            self.cfg["classifier_params"]
+        ).to(self.cfg["device"])
+        best_model.load_state_dict(torch.load(best_model_path))
+        best_model.eval()
 
         with torch.no_grad():
             for img_inputs, txt_input, labels in tqdm(self.test_loader):
                 img_inputs, txt_input, labels = img_inputs.to(self.cfg["device"]), txt_input.to(self.cfg["device"]), labels.to(self.cfg["device"])
-                outputs = self.best_model(img_inputs, txt_input)
+                outputs = best_model(img_inputs, txt_input)
                 predictions.extend(list(torch.argmax(outputs, dim=1).cpu().numpy()))
                     
-        predictions = np.array(predictions)          
+        predictions = np.array(predictions)      
         output_df["label"] = predictions
 
         if not os.path.exists("submissions"):
