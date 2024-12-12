@@ -117,7 +117,10 @@ class Trainer():
         )
         predictions = []
                             
+        best_model_path = f"saved_models/best_model_{self.cfg['exp_id']}.pt"
+        self.best_model.load_state_dict(torch.load(best_model_path))
         self.best_model.eval()
+
         with torch.no_grad():
             for img_inputs, txt_input, labels in tqdm(self.test_loader):
                 img_inputs, txt_input, labels = img_inputs.to(self.cfg["device"]), txt_input.to(self.cfg["device"]), labels.to(self.cfg["device"])
@@ -133,20 +136,7 @@ class Trainer():
         output_df.to_csv(f"submissions/submission_{self.cfg['exp_id']}.csv", index=False)
         self.logger.log("Test results saved")
 
-        correct_preds = 0.0
-        total_preds = 0
-
-        with torch.no_grad():
-            for img_inputs, txt_input, labels in tqdm(self.val_loader):
-                img_inputs, txt_input, labels = img_inputs.to(self.cfg["device"]), txt_input.to(self.cfg["device"]), labels.to(self.cfg["device"])
-
-                outputs = self.best_model(img_inputs, txt_input)
-        
-                predictions = torch.argmax(outputs, dim=1)
-                correct_preds += torch.sum(predictions == labels).item()
-                total_preds += labels.shape[0]
-
-        self.logger.log(f"Validation accuracy with best model: {correct_preds / total_preds}")
+        self.logger.log(f"Validation accuracy with best model: {self.best_acc}")
 
     def plot(self):
         if not os.path.exists("figures"):
