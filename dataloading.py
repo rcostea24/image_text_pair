@@ -2,7 +2,8 @@ import cv2
 import pandas as pd
 import torch
 import os
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset, DataLoader
+import torchvision.transforms as T
 
 import nltk
 nltk.download('punkt')
@@ -109,3 +110,19 @@ class ImagePairDataset(Dataset):
             sample_img = self.img_transforms(sample_img)
 
         return sample_img, sample_txt, label
+    
+def load_data(cfg):
+    img_transforms = T.Compose([
+        T.ToTensor(),
+        T.Resize((224, 244))
+    ])
+
+    train_dataset = ImagePairDataset(cfg["data_root_path"], "train", img_transforms)
+    val_dataset = ImagePairDataset(cfg["data_root_path"], "val", img_transforms)
+    test_dataset = ImagePairDataset(cfg["data_root_path"], "test", img_transforms)
+
+    train_dataloader = DataLoader(train_dataset, batch_size=cfg["batch_size"], shuffle=True)
+    val_dataloader = DataLoader(val_dataset, batch_size=cfg["batch_size"], shuffle=False)
+    test_dataloader = DataLoader(test_dataset, batch_size=cfg["batch_size"], shuffle=False)
+
+    return train_dataloader, val_dataloader, test_dataloader

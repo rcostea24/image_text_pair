@@ -1,34 +1,19 @@
+import argparse
 import os
-from torch.utils.data import DataLoader
-import torchvision.transforms as T
 import json
 import torch
 
-from dataloading import ImagePairDataset
 from logger import Logger
 from trainer import Trainer
-from dataloading import VocabSize
+from dataloading import VocabSize, load_data
 
-DATA_ROOT_PATH = "/kaggle/input/image-sentence-pair-matching"
 EXPERIMENTS_ROOT = r"experiments"
 
-def load_data(batch_size):
-    img_transforms = T.Compose([
-        T.ToTensor(),
-        T.Resize((224, 244))
-    ])
-
-    train_dataset = ImagePairDataset(DATA_ROOT_PATH, "train", img_transforms)
-    val_dataset = ImagePairDataset(DATA_ROOT_PATH, "val", img_transforms)
-    test_dataset = ImagePairDataset(DATA_ROOT_PATH, "test", img_transforms)
-
-    train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-    val_dataloader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
-    test_dataloader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
-
-    return train_dataloader, val_dataloader, test_dataloader
-
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--data_root_path", default="/kaggle/input/image-sentence-pair-matching")
+    args = parser.parse_args()
+
     exp_cfgs = sorted(os.listdir(EXPERIMENTS_ROOT))
     print(exp_cfgs)
     for cfg_file_name in exp_cfgs:
@@ -39,9 +24,9 @@ if __name__ == "__main__":
             
         cfg["exp_id"] = cfg_path.split("_")[-1].split(".")[0]
         cfg["device"] = "cuda" if torch.cuda.is_available() else "cpu"
-        cfg["data_root_path"] = DATA_ROOT_PATH
+        cfg["data_root_path"] = args.data_root_path
 
-        train_dataloader, val_dataloader, test_dataloader = load_data(cfg["batch_size"])
+        train_dataloader, val_dataloader, test_dataloader = load_data(cfg)
 
         vision_params = cfg["vision_params"]
 
@@ -49,6 +34,9 @@ if __name__ == "__main__":
         language_params["vocab_size"] = VocabSize.vocab_size
 
         classifier_params = cfg["classifier_params"]
+
+        if not os.path.exists("logs"):
+            os.makedirs("logs")
 
         logger = Logger(f"logs/log_{cfg['exp_id']}.txt")
 

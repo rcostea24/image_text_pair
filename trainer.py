@@ -36,6 +36,9 @@ class Trainer():
 
         loss_obj = getattr(nn, self.cfg["loss_fn"])
         self.loss_fn = loss_obj()
+
+        if not os.path.exists("saved_models"):
+            os.makedirs("saved_models")
         
         for epoch in range(self.cfg["epochs"]):
             self.logger.log(f"epoch: {epoch+1}")
@@ -123,7 +126,11 @@ class Trainer():
                     
         predictions = np.array(predictions)          
         output_df["label"] = predictions
-        output_df.to_csv(f"submission/submission_{self.cfg['exp_id']}.csv", index=False)
+
+        if not os.path.exists("submissions"):
+            os.makedirs("submissions")
+
+        output_df.to_csv(f"submissions/submission_{self.cfg['exp_id']}.csv", index=False)
         self.logger.log("Test results saved")
 
         correct_preds = 0.0
@@ -142,6 +149,9 @@ class Trainer():
         self.logger.log(f"Validation accuracy with best model: {correct_preds / total_preds}")
 
     def plot(self):
+        if not os.path.exists("figures"):
+            os.makedirs("figures")
+
         plt.plot(range(self.cfg["epochs"]), self.train_losses, label="train loss")
         plt.plot(range(self.cfg["epochs"]), self.val_losses, label="val loss")
         plt.legend()
