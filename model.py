@@ -20,7 +20,7 @@ class Model(nn.Module):
 
         fc_size = classifier_params["fc_size"]
         cls_layers = [
-            nn.BatchNorm1d(1024),
+            nn.BatchNorm1d(fc_size[0]),
             nn.Linear(
                 fc_size[0], 
                 fc_size[1]
