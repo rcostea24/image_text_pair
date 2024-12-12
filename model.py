@@ -19,16 +19,21 @@ class Model(nn.Module):
         self.language_model = LanguageModel(language_params)
 
         fc_size = classifier_params["fc_size"]
+        cls_act = getattr(nn, classifier_params["act"])
         cls_layers = [
             nn.BatchNorm1d(fc_size[0]),
             nn.Linear(
                 fc_size[0], 
                 fc_size[1]
-            )
+            ),
+            cls_act()
         ]
 
         for id in range(1, len(fc_size)-1):
             cls_layers.append(nn.Linear(fc_size[id], fc_size[id+1]))
+            
+            if id < len(fc_size):
+                cls_layers.append(cls_act())
 
         cls_layers.append(nn.Softmax(dim=1))
 
