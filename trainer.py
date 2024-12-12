@@ -4,7 +4,7 @@ import pandas as pd
 import torch
 import torch.nn as nn
 from model import Model
-from tqdm import tqdm
+from tqdm.notebook import tqdm
 import matplotlib.pyplot as plt
 
 class Trainer():
@@ -30,8 +30,6 @@ class Trainer():
             self.cfg["language_params"], 
             self.cfg["classifier_params"]
         ).to(self.cfg["device"])
-
-        print(self.model)
         
         optimizer_obj = getattr(torch.optim, self.cfg["optimizer"])
         self.optimizer = optimizer_obj(self.model.parameters(), lr=self.cfg["lr"])
