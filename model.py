@@ -8,13 +8,13 @@ class Model(nn.Module):
         super(Model, self).__init__()
         self.vision_model = VisionModel(vision_params)
 
-        # if vision_weights is not None:
-        #     state_dict = torch.load(vision_weights)
-        #     backbone_state_dict = {}
-        #     for key, value in state_dict.items():
-        #         if key in self.vision_model.state_dict():
-        #             backbone_state_dict[key] = value
-        #     self.vision_model.load_state_dict(backbone_state_dict)
+        if vision_params["vision_weights"] is not None:
+            state_dict = torch.load(vision_params["vision_weights"])
+            backbone_state_dict = {}
+            for key, value in state_dict.items():
+                if key in self.vision_model.state_dict():
+                    backbone_state_dict[key] = value
+            self.vision_model.load_state_dict(backbone_state_dict)
         
         self.language_model = LanguageModel(language_params)
 
