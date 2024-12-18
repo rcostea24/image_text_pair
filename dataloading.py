@@ -41,11 +41,12 @@ def build_vocab(tokenized_captions):
     vocab = Counter(word for sent in tokenized_captions for word in sent)
     
     word_to_index = {}
-    word_to_index["<pad>"] = 0 
-    word_to_index["<unk>"] = 1
+    word_to_index["<mask>"] = 0 
+    word_to_index["<pad>"] = 1
+    word_to_index["<unk>"] = 2
 
     for id, (word, _) in enumerate(vocab.items()):
-        word_to_index[word] = id+2
+        word_to_index[word] = id+3
     
     return word_to_index
 
