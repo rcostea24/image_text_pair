@@ -6,7 +6,7 @@
     "optimizer": "Adam",
     "loss_fn": "CrossEntropyLoss",
     "vision_params": {
-
+        "vision_weights": "weights/vision_model.pt"
     },
     "language_params": {
         "vocab_size": -1, 
