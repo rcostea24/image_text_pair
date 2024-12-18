@@ -19,10 +19,6 @@ STEMMER = SnowballStemmer('romanian')
 MAX_LEN = 32
 WORD_TO_INDEX = None
 
-# class VocabSize():
-#     def __init__(self, vocab_size):
-#         self.vocab_size = vocab_size
-
 class VocabSize():
     vocab_size = None
 

@@ -86,6 +86,9 @@ class VisionModel(nn.Module):
     # Vision model inspired by ResNet18
     def __init__(self, vision_params={}):
         super(VisionModel, self).__init__()
+
+        if len(vision_params) > 0:
+            self.predict_rotation = vision_params["predict_rotation"]
         
         self.first_layer = nn.Sequential(
             nn.Conv2d(3, 64, 7, 2, 3, bias=False),
@@ -115,6 +118,13 @@ class VisionModel(nn.Module):
 
         self.flatten = nn.Flatten()
 
+        if self.predict_rotation:
+            self.rotation_classifier = nn.Sequential(
+                nn.Linear(512, 256),
+                nn.Linear(256, 128),
+                nn.Linear(128, 5)
+            )
+
     def forward(self, x):
         # print(x.shape)
         x = self.first_layer(x)
@@ -134,27 +144,15 @@ class VisionModel(nn.Module):
         # print(x.shape)
         x = self.flatten(x)
 
-        return x
-
-class Model(nn.Module):
-    def __init__(self, vision_params={}):
-        super(Model, self).__init__()
-        self.backbone = VisionModel()
-        self.rotation_classifier = nn.Sequential(
-            nn.Linear(512, 256),
-            nn.Linear(256, 128),
-            nn.Linear(128, 5)
-        )
-
-    def forward(self, x):
-        features = self.backbone(x)
-        out = self.rotation_classifier(features)
-        return out
-
-
+        if self.predict_rotation:
+            out = self.rotation_classifier(x)
+            return out
+        else:
+            return x
+        
 batch_size = 64
 lr = 1e-3
-epochs = 10
+epochs = 50
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 root = "/kaggle/input/image-sentence-pair-matching"
@@ -169,6 +167,10 @@ val_dataset = ImageRotation(root, "val", img_transforms)
 
 train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 val_dataloader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
+
+vision_params = {
+    "predict_rotation": True
+}
 
 def train_step(model, train_loader, optimizer, loss_fn):
     model.train()
@@ -221,7 +223,7 @@ def val_step(model, val_loader, optimizer, loss_fn):
     return val_step_loss, val_step_acc
 
 def train():
-    model = Model().to(device)
+    model = VisionModel(vision_params).to(device)
     
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
     loss_fn = nn.CrossEntropyLoss()
@@ -256,21 +258,21 @@ def train():
     plt.plot(range(epochs), train_losses)
     plt.title("Train loss")
     plt.savefig("train_loss.jpg")
-    plt.close()
+    plt.plot()
     
     plt.plot(range(epochs), train_accs)
     plt.title("Train acc")
     plt.savefig("train_acc.jpg")
-    plt.close()
+    plt.plot()
     
     plt.plot(range(epochs), val_losses)
     plt.title("Val loss")
     plt.savefig("val_loss.jpg")
-    plt.close()
+    plt.plot()
     
     plt.plot(range(epochs), val_accs)
     plt.title("Val acc")
     plt.savefig("val_acc.jpg")
-    plt.close()
+    plt.plot()
 
 train()

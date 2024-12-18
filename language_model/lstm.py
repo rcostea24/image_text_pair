@@ -15,17 +15,18 @@ class LanguageModel(nn.Module):
 
     def forward(self, x):
         x = self.embedding(x)
-        _, (hn, _) = self.lstm(x)
-        return hn[-1]
+        _, (hidden_state, _) = self.lstm(x)
+        return hidden_state[-1]
     
 if __name__ == "__main__":
     model = LanguageModel({
         "vocab_size": 3622, 
         "embed_dim": 256,
-        "hidden_dim": 512
-    }).to("cuda")
+        "hidden_dim": 512,
+        "num_layers": 3,
+    }).to("cpu")
 
-    x = torch.randint(3622, size=(3622,)).to("cuda")
+    x = torch.randint(3622, size=(3622,)).to("cpu")
 
     y = model(x)
 
