@@ -17,7 +17,11 @@ from collections import Counter
 STOP_WORDS_EN = set(stopwords.words('english'))
 STEMMER = SnowballStemmer('romanian')
 MAX_LEN = 32
-WORD_TO_INDEX = None
+
+WORD_TO_INDEX = {}
+WORD_TO_INDEX["<mask>"] = 0 
+WORD_TO_INDEX["<pad>"] = 1
+WORD_TO_INDEX["<unk>"] = 2
 
 class VocabSize():
     vocab_size = None
@@ -38,17 +42,12 @@ def get_tokens(caption):
     return tokens
 
 def build_vocab(tokenized_captions):
+    global WORD_TO_INDEX
     vocab = Counter(word for sent in tokenized_captions for word in sent)
-    
-    word_to_index = {}
-    word_to_index["<mask>"] = 0 
-    word_to_index["<pad>"] = 1
-    word_to_index["<unk>"] = 2
-
     for id, (word, _) in enumerate(vocab.items()):
-        word_to_index[word] = id+3
+        if word not in WORD_TO_INDEX:
+            WORD_TO_INDEX[word] = id+3
     
-    return word_to_index
 
 class ImagePairDataset(Dataset):
     def __init__(self, root, split, img_transforms=None):
@@ -63,9 +62,8 @@ class ImagePairDataset(Dataset):
         for caption in captions:
             tokenized_captions.append(get_tokens(caption))
 
-        if split == "train":
-            WORD_TO_INDEX = build_vocab(tokenized_captions)
-            VocabSize.vocab_size = len(WORD_TO_INDEX)
+        build_vocab(tokenized_captions)
+        VocabSize.vocab_size = len(WORD_TO_INDEX)
         
         encoded_captions = []
         for tokenized_caption in tokenized_captions:
