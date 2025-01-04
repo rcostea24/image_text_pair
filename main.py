@@ -11,7 +11,7 @@ EXPERIMENTS_ROOT = r"experiments"
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data_root_path", default="/kaggle/input/image-sentence-pair-matching")
+    parser.add_argument("--data_root_path", default="/kaggle/input/image-sentence-pair-v2")
     args = parser.parse_args()
 
     exp_cfgs = sorted(os.listdir(EXPERIMENTS_ROOT))

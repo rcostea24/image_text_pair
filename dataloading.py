@@ -44,9 +44,12 @@ def get_tokens(caption):
 def build_vocab(tokenized_captions):
     global WORD_TO_INDEX
     vocab = Counter(word for sent in tokenized_captions for word in sent)
+    start_id = list(WORD_TO_INDEX.values())[-1]
+    increment = 1
     for id, (word, _) in enumerate(vocab.items()):
         if word not in WORD_TO_INDEX:
-            WORD_TO_INDEX[word] = id+3
+            WORD_TO_INDEX[word] = start_id + increment
+            increment += 1
     
 
 class ImagePairDataset(Dataset):

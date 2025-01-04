@@ -8,23 +8,25 @@ class Model(nn.Module):
         super(Model, self).__init__()
         self.vision_model = VisionModel(vision_params)
 
-        if vision_params["weights"] is not None:
+        if "weights" in vision_params and vision_params["weights"] is not None:
             state_dict = torch.load(vision_params["weights"])
             backbone_state_dict = {}
             for key, value in state_dict.items():
                 if key in self.vision_model.state_dict():
                     backbone_state_dict[key] = value
             self.vision_model.load_state_dict(backbone_state_dict)
+            print("vision weights loaded")
         
         self.language_model = LanguageModel(language_params)
 
-        if language_params["weights"] is not None:
+        if "weights" in language_params and language_params["weights"] is not None:
             state_dict = torch.load(language_params["weights"])
             backbone_state_dict = {}
             for key, value in state_dict.items():
                 if key in self.language_model.state_dict():
                     backbone_state_dict[key] = value
             self.language_model.load_state_dict(backbone_state_dict)
+            print("language weights loaded")
 
         fc_size = classifier_params["fc_size"]
         cls_act = getattr(nn, classifier_params["act"])
