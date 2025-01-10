@@ -26,7 +26,8 @@ if __name__ == "__main__":
         "num_layers": 3,
     }).to("cpu")
 
-    x = torch.randint(3622, size=(3622,)).to("cpu")
+    x = torch.randint(3622, size=(64,32)).to("cpu")
 
     y = model(x)
+    print(y.shape)
 

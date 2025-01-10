@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 from vision_model.cnn import VisionModel
-from language_model.lstm import LanguageModel
+from language_model.mlp import LanguageModel
 
 class Model(nn.Module):
     def __init__(self, vision_params, language_params, classifier_params):
