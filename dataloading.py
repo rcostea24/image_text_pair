@@ -112,7 +112,7 @@ class ImagePairDataset(Dataset):
 def load_data(cfg):
     img_transforms = T.Compose([
         T.ToTensor(),
-        T.Resize((224, 244))
+        T.Resize(cfg["vision_params"]["img_size"])
     ])
 
     train_dataset = ImagePairDataset(cfg["data_root_path"], "train", img_transforms)

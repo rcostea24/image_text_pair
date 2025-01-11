@@ -1,18 +1,20 @@
 {
     "exp_id": "let_it_empty",
     "batch_size": 64,
-    "lr": 1e-4,
+    "lr": 2e-4,
     "epochs": 50,
     "optimizer": "Adam",
     "loss_fn": "CrossEntropyLoss",
     "vision_params": {
-        "vision_weights": "weights/vision_model.pt"
+        "model_type": "autoencoder",
+        "img_size": [96, 96]
     },
     "language_params": {
+        "model_type": "lstm",
         "vocab_size": -1, 
-        "embed_dim": 32,
-        "fc_size": [1024, 512],
-        "act": "ReLU"
+        "embed_dim": 256,
+        "hidden_dim": 512,
+        "num_layers": 1
     },
     "classifier_params": {
         "fc_size": [1024, 512, 256, 2],

@@ -1,7 +1,7 @@
 {
     "exp_id": "let_it_empty",
     "batch_size": 64,
-    "lr": 1e-3,
+    "lr": 1e-4,
     "epochs": 50,
     "optimizer": "Adam",
     "loss_fn": "CrossEntropyLoss",
@@ -9,6 +9,7 @@
         "vision_weights": "weights/vision_model.pt"
     },
     "language_params": {
+        "model_type": "mlp",
         "vocab_size": -1, 
         "embed_dim": 32,
         "fc_size": [1024, 512],

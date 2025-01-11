@@ -1,12 +1,15 @@
 import torch
 import torch.nn as nn
-from vision_model.cnn import VisionModel
-from language_model.mlp import LanguageModel
 
+import importlib
 class Model(nn.Module):
     def __init__(self, vision_params, language_params, classifier_params):
         super(Model, self).__init__()
-        self.vision_model = VisionModel(vision_params)
+
+        vision_module = importlib.import_module(f"vision_model.{vision_params['model_type']}")
+        vision_model_class = getattr(vision_module, "VisionModel")
+
+        self.vision_model = vision_model_class(vision_params)
 
         if "weights" in vision_params and vision_params["weights"] is not None:
             state_dict = torch.load(vision_params["weights"])
@@ -16,8 +19,11 @@ class Model(nn.Module):
                     backbone_state_dict[key] = value
             self.vision_model.load_state_dict(backbone_state_dict)
             print("vision weights loaded")
+
+        language_module = importlib.import_module(f"language_model.{language_params['model_type']}")
+        language_model_class = getattr(language_module, "LanguageModel")
         
-        self.language_model = LanguageModel(language_params)
+        self.language_model = language_model_class(language_params)
 
         if "weights" in language_params and language_params["weights"] is not None:
             state_dict = torch.load(language_params["weights"])
