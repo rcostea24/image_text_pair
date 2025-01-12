@@ -7,7 +7,8 @@
     "loss_fn": "CrossEntropyLoss",
     "vision_params": {
         "model_type": "autoencoder",
-        "img_size": [96, 96]
+        "img_size": [96, 96],
+        "weights": "weights/autoencoder.pt"
     },
     "language_params": {
         "model_type": "lstm",
@@ -17,7 +18,7 @@
         "num_layers": 1
     },
     "classifier_params": {
-        "fc_size": [1024, 512, 256, 2],
+        "fc_size": [1088, 512, 256, 2],
         "act": "ReLU"
     }
 }

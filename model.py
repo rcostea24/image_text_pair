@@ -12,7 +12,7 @@ class Model(nn.Module):
         self.vision_model = vision_model_class(vision_params)
 
         if "weights" in vision_params and vision_params["weights"] is not None:
-            state_dict = torch.load(vision_params["weights"])
+            state_dict = torch.load(vision_params["weights"], map_location="cpu")
             backbone_state_dict = {}
             for key, value in state_dict.items():
                 if key in self.vision_model.state_dict():
@@ -57,6 +57,13 @@ class Model(nn.Module):
 
     def forward(self, img_x, txt_x):
         vision_embed = self.vision_model(img_x)
+
+        if isinstance(vision_embed, list):
+            vision_embed = vision_embed[1]
+            dim1 = vision_embed.shape[0]
+            dim2 = vision_embed.shape[1] * vision_embed.shape[2] * vision_embed.shape[3]
+            vision_embed = vision_embed.view(dim1, dim2)
+
         language_embed = self.language_model(txt_x)
 
         classifier_input = torch.cat([vision_embed, language_embed], dim=1)

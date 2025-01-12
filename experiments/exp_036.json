@@ -1,0 +1,24 @@
+{
+    "exp_id": "let_it_empty",
+    "batch_size": 64,
+    "lr": 2e-4,
+    "epochs": 50,
+    "optimizer": "Adam",
+    "loss_fn": "CrossEntropyLoss",
+    "vision_params": {
+        "model_type": "autoencoder",
+        "img_size": [96, 96],
+        "weights": "weights/autoencoder.pt"
+    },
+    "language_params": {
+        "model_type": "mlp",
+        "vocab_size": -1, 
+        "embed_dim": 32,
+        "fc_size": [1024, 512],
+        "act": "ReLU"
+    },
+    "classifier_params": {
+        "fc_size": [1088, 512, 256, 2],
+        "act": "ReLU"
+    }
+}

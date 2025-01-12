@@ -36,27 +36,25 @@ class Upsample(nn.Module):
         return self.dropout(out) if self.use_dropout else out
 
 class VisionModel(nn.Module):
-    def __init__(self):
+    def __init__(self, vision_params):
         super(VisionModel, self).__init__()
 
         self.init_conv = nn.Sequential(
-            nn.Conv2d(in_channels=3, out_channels=16, kernel_size=3, stride=1, padding=1),
-            nn.BatchNorm2d(16),
+            nn.Conv2d(in_channels=3, out_channels=4, kernel_size=3, stride=1, padding=1),
+            nn.BatchNorm2d(4),
             nn.ReLU(),
         )
 
-        self.down1 = Downsample(in_channels=16, out_channels=32)
-        self.down2 = Downsample(in_channels=32, out_channels=32)
-        self.down3 = Downsample(in_channels=32, out_channels=64)
-        # self.down4 = Downsample(in_channels=128, out_channels=256)
+        self.down1 = Downsample(in_channels=4, out_channels=4)
+        self.down2 = Downsample(in_channels=4, out_channels=4)
+        self.down3 = Downsample(in_channels=4, out_channels=4)
 
-        self.up1 = Upsample(in_channels=64, out_channels=32, dropout=True)
-        self.up2 = Upsample(in_channels=32, out_channels=32, dropout=True)
-        self.up3 = Upsample(in_channels=32, out_channels=16, dropout=True)
-        # self.up4 = Upsample(in_channels=32, out_channels=16, dropout=False)
+        self.up1 = Upsample(in_channels=4, out_channels=4, dropout=True)
+        self.up2 = Upsample(in_channels=4, out_channels=4, dropout=True)
+        self.up3 = Upsample(in_channels=4, out_channels=4, dropout=False)
 
         self.last_conv = nn.Sequential(
-            nn.Conv2d(in_channels=16, out_channels=3, kernel_size=3, stride=1, padding=1),
+            nn.Conv2d(in_channels=4, out_channels=3, kernel_size=3, stride=1, padding=1),
             nn.ReLU()
         )
 
@@ -70,7 +68,6 @@ class VisionModel(nn.Module):
         # print(x.shape)
         x = self.down3(x)
         # print(x.shape)
-        # x = self.down4(x)
         # print(x.shape)
 
         
@@ -82,11 +79,10 @@ class VisionModel(nn.Module):
         # print(x.shape)
         x = self.up3(x)
         # print(x.shape)
-        # x = self.up4(x)
         # print(x.shape)
         
         x = self.last_conv(x)
         # print(x.shape)
-        return x, features
+        return [x, features]
         
         
