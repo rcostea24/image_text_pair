@@ -1,0 +1,24 @@
+{
+    "exp_id": "let_it_empty",
+    "batch_size": 64,
+    "lr": 2e-4,
+    "epochs": 50,
+    "optimizer": "Adam",
+    "loss_fn": "BCEWithLogitsLoss",
+    "threshold": 0.2,
+    "vision_params": {
+        "model_type": "cnn",
+        "img_size": [224, 224]
+    },
+    "language_params": {
+        "model_type": "lstm",
+        "vocab_size": -1, 
+        "embed_dim": 256,
+        "hidden_dim": 512,
+        "num_layers": 1
+    },
+    "classifier_params": {
+        "fc_size": [1024, 512, 256, 1],
+        "act": "Tanh"
+    }
+}
