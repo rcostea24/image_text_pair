@@ -33,6 +33,11 @@ class Trainer():
         optimizer_obj = getattr(torch.optim, self.cfg["optimizer"])
         self.optimizer = optimizer_obj(self.model.parameters(), lr=self.cfg["lr"])
 
+        self.threshold = 0.5
+        if "threshold" in self.cfg:
+            self.threshold = self.cfg["threshold"]
+
+
         loss_obj = getattr(nn, self.cfg["loss_fn"])
         self.loss_fn = loss_obj()
 
@@ -88,7 +93,7 @@ class Trainer():
             if str(type(self.loss_fn)) == "<class 'torch.nn.modules.loss.CrossEntropyLoss'>":
                 predictions = torch.argmax(outputs, dim=1)
             elif str(type(self.loss_fn)) == "<class 'torch.nn.modules.loss.BCEWithLogitsLoss'>":
-                predictions = torch.round(torch.sigmoid(outputs))
+                predictions = torch.sigmoid(outputs) >= self.threshold
 
             correct_preds += torch.sum(predictions == labels).item()
             total_preds += labels.shape[0]
