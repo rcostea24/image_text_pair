@@ -154,6 +154,7 @@ class Trainer():
                 outputs = best_model(img_inputs, txt_input)
 
                 if str(type(self.loss_fn)) == "<class 'torch.nn.modules.loss.CrossEntropyLoss'>":
+                    outputs = torch.softmax(outputs, dim=1)
                     predictions.extend(list(torch.argmax(outputs, dim=1).cpu().numpy()))
                 elif str(type(self.loss_fn)) == "<class 'torch.nn.modules.loss.BCEWithLogitsLoss'>":
                     predictions.extend(list(torch.round(torch.sigmoid(outputs)).cpu().numpy()))
