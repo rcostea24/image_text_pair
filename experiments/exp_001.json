@@ -6,9 +6,11 @@
     "optimizer": "Adam",
     "loss_fn": "CrossEntropyLoss",
     "vision_params": {
-
+        "model_type": "cnn",
+        "img_size": [224, 224]
     },
     "language_params": {
+        "model_type": "lstm",
         "vocab_size": -1, 
         "embed_dim": 256,
         "hidden_dim": 512,
