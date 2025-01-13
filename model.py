@@ -35,6 +35,7 @@ class Model(nn.Module):
             print("language weights loaded")
 
         fc_size = classifier_params["fc_size"]
+        
         cls_act = getattr(nn, classifier_params["act"])
         cls_layers = [
             nn.BatchNorm1d(fc_size[0]),
@@ -48,10 +49,10 @@ class Model(nn.Module):
         for id in range(1, len(fc_size)-1):
             cls_layers.append(nn.Linear(fc_size[id], fc_size[id+1]))
             
-            if id < len(fc_size):
+            if id < len(fc_size) - 2:
                 cls_layers.append(cls_act())
 
-        cls_layers.append(nn.Softmax(dim=1))
+        # cls_layers.append(nn.Softmax(dim=1))
 
         self.classifier = nn.Sequential(*cls_layers)
 

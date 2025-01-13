@@ -67,17 +67,27 @@ class Trainer():
 
         for img_inputs, txt_input, labels in tqdm(self.train_loader):
             img_inputs, txt_input, labels = img_inputs.to(self.cfg["device"]), txt_input.to(self.cfg["device"]), labels.to(self.cfg["device"])
+            labels = labels.view(labels.shape[0], 1).type(torch.float32)
 
             self.optimizer.zero_grad()
             
             outputs = self.model(img_inputs, txt_input)
+
+            if str(type(self.loss_fn)) == "<class 'torch.nn.modules.loss.CrossEntropyLoss'>":
+                outputs = torch.softmax(outputs, dim=1)
+
             loss = self.loss_fn(outputs, labels)
 
             loss.backward()
             self.optimizer.step()
 
             total_loss += loss.item()
-            predictions = torch.argmax(outputs, dim=1)
+            
+            if str(type(self.loss_fn)) == "<class 'torch.nn.modules.loss.CrossEntropyLoss'>":
+                predictions = torch.argmax(outputs, dim=1)
+            elif str(type(self.loss_fn)) == "<class 'torch.nn.modules.loss.BCEWithLogitsLoss'>":
+                predictions = torch.round(torch.sigmoid(outputs))
+
             correct_preds += torch.sum(predictions == labels).item()
             total_preds += labels.shape[0]
 
@@ -100,7 +110,12 @@ class Trainer():
                 loss = self.loss_fn(outputs, labels)
         
                 total_loss += loss.item()
-                predictions = torch.argmax(outputs, dim=1)
+
+                if str(type(self.loss_fn)) == "<class 'torch.nn.modules.loss.CrossEntropyLoss'>":
+                    predictions = torch.argmax(outputs, dim=1)
+                elif str(type(self.loss_fn)) == "<class 'torch.nn.modules.loss.BCEWithLogitsLoss'>":
+                    predictions = torch.round(torch.sigmoid(outputs))
+
                 correct_preds += torch.sum(predictions == labels).item()
                 total_preds += labels.shape[0]
 
@@ -128,7 +143,12 @@ class Trainer():
             for img_inputs, txt_input, labels in tqdm(self.test_loader):
                 img_inputs, txt_input, labels = img_inputs.to(self.cfg["device"]), txt_input.to(self.cfg["device"]), labels.to(self.cfg["device"])
                 outputs = best_model(img_inputs, txt_input)
-                predictions.extend(list(torch.argmax(outputs, dim=1).cpu().numpy()))
+
+                if str(type(self.loss_fn)) == "<class 'torch.nn.modules.loss.CrossEntropyLoss'>":
+                    predictions.extend(list(torch.argmax(outputs, dim=1).cpu().numpy()))
+                elif str(type(self.loss_fn)) == "<class 'torch.nn.modules.loss.BCEWithLogitsLoss'>":
+                    predictions.extend(list(torch.round(torch.sigmoid(outputs)).cpu().numpy()))
+                
                     
         predictions = np.array(predictions)      
         output_df["label"] = predictions
