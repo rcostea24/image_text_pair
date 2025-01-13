@@ -183,9 +183,19 @@ class Trainer():
             for img_inputs, txt_input, labels in tqdm(self.val_loader):
                 img_inputs, txt_input, labels = img_inputs.to(self.cfg["device"]), txt_input.to(self.cfg["device"]), labels.to(self.cfg["device"])
 
-                outputs = best_model(img_inputs, txt_input)
-        
-                predictions = torch.argmax(outputs, dim=1)
+                if str(type(self.loss_fn)) == "<class 'torch.nn.modules.loss.BCEWithLogitsLoss'>":
+                    labels = labels.view(labels.shape[0], 1).type(torch.float32)
+
+                outputs = self.model(img_inputs, txt_input)
+
+                if str(type(self.loss_fn)) == "<class 'torch.nn.modules.loss.CrossEntropyLoss'>":
+                    outputs = torch.softmax(outputs, dim=1)
+
+                if str(type(self.loss_fn)) == "<class 'torch.nn.modules.loss.CrossEntropyLoss'>":
+                    predictions = torch.argmax(outputs, dim=1)
+                elif str(type(self.loss_fn)) == "<class 'torch.nn.modules.loss.BCEWithLogitsLoss'>":
+                    predictions = (torch.sigmoid(outputs) >= self.threshold).type(torch.int32)
+
                 correct_preds += torch.sum(predictions == labels).item()
                 total_preds += labels.shape[0]
 
