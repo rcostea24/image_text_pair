@@ -93,7 +93,7 @@ class Trainer():
             if str(type(self.loss_fn)) == "<class 'torch.nn.modules.loss.CrossEntropyLoss'>":
                 predictions = torch.argmax(outputs, dim=1)
             elif str(type(self.loss_fn)) == "<class 'torch.nn.modules.loss.BCEWithLogitsLoss'>":
-                predictions = torch.sigmoid(outputs) >= self.threshold
+                predictions = (torch.sigmoid(outputs) >= self.threshold).type(torch.int32)
 
             correct_preds += torch.sum(predictions == labels).item()
             total_preds += labels.shape[0]
@@ -128,7 +128,7 @@ class Trainer():
                 if str(type(self.loss_fn)) == "<class 'torch.nn.modules.loss.CrossEntropyLoss'>":
                     predictions = torch.argmax(outputs, dim=1)
                 elif str(type(self.loss_fn)) == "<class 'torch.nn.modules.loss.BCEWithLogitsLoss'>":
-                    predictions = torch.sigmoid(outputs) >= self.threshold
+                    predictions = (torch.sigmoid(outputs) >= self.threshold).type(torch.int32)
 
                 correct_preds += torch.sum(predictions == labels).item()
                 total_preds += labels.shape[0]
@@ -160,10 +160,11 @@ class Trainer():
 
                 if str(type(self.loss_fn)) == "<class 'torch.nn.modules.loss.CrossEntropyLoss'>":
                     outputs = torch.softmax(outputs, dim=1)
-                    predictions.extend(list(torch.argmax(outputs, dim=1).cpu().numpy()))
+                    crt_preds = torch.argmax(outputs, dim=1)
                 elif str(type(self.loss_fn)) == "<class 'torch.nn.modules.loss.BCEWithLogitsLoss'>":
-                    predictions.extend(list((torch.sigmoid(outputs) >= self.threshold).cpu().numpy()))
-                
+                    crt_preds = (torch.sigmoid(outputs) >= self.threshold).type(torch.int32)
+
+                predictions.extend(list(crt_preds.cpu().numpy()))
                     
         predictions = np.array(predictions)      
         output_df["label"] = predictions
