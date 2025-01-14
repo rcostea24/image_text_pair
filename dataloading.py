@@ -13,10 +13,12 @@ from nltk.stem.snowball import SnowballStemmer
 from nltk.corpus import stopwords
 import re
 from collections import Counter
+from autocorrect import Speller
 
 STOP_WORDS_EN = set(stopwords.words('english'))
 STEMMER = SnowballStemmer('romanian')
 MAX_LEN = 32
+SPELL = Speller()
 
 WORD_TO_INDEX = {}
 WORD_TO_INDEX["<mask>"] = 0 
@@ -31,6 +33,7 @@ def get_tokens(caption):
     
     caption = re.sub(r'[^\w\s]', ' ', caption)
     caption = re.sub(r'\s+', ' ', caption)
+    caption = SPELL(caption)
     caption = word_tokenize(caption)
     
     tokens = []
