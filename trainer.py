@@ -147,7 +147,7 @@ class Trainer():
         predictions = []
                             
         # best_model_path = f"saved_models/best_model_{self.cfg['exp_id']}.pt"
-        best_model_path = f"saved_models/last_model_{self.cfg['exp_id']}.pt"
+        best_model_path = f"saved_models/best_model_{self.cfg['exp_id']}.pt"
         best_model = Model(
             self.cfg["vision_params"], 
             self.cfg["language_params"], 
