@@ -33,7 +33,7 @@ def get_tokens(caption):
     
     caption = re.sub(r'[^\w\s]', ' ', caption)
     caption = re.sub(r'\s+', ' ', caption)
-    caption = SPELL(caption)
+    # caption = SPELL(caption)
     caption = word_tokenize(caption)
     
     tokens = []
