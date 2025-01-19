@@ -58,7 +58,7 @@ if __name__ == "__main__":
         trainer = Trainer(cfg, logger, train_dataloader, val_dataloader, test_dataloader)
 
         # start training
-        # trainer.train()
+        trainer.train()
 
         # inference on test data and save submission
         trainer.test_step()

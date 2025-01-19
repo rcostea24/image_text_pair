@@ -54,34 +54,34 @@ class Trainer():
             os.makedirs("saved_models")
         
         # iterate epochs
-        for epoch in range(self.cfg["epochs"]):
-            self.logger.log(f"epoch: {epoch+1}")
+        # for epoch in range(self.cfg["epochs"]):
+        #     self.logger.log(f"epoch: {epoch+1}")
 
-            # train step
-            train_step_loss, train_step_acc = self.train_step()
-            self.logger.log(f"train_step_loss: {train_step_loss} | train_step_acc = {train_step_acc}")
+        #     # train step
+        #     train_step_loss, train_step_acc = self.train_step()
+        #     self.logger.log(f"train_step_loss: {train_step_loss} | train_step_acc = {train_step_acc}")
             
-            # validation step
-            val_step_loss, val_step_acc = self.val_step()
-            self.logger.log(f"val_step_loss: {val_step_loss} | val_step_acc = {val_step_acc}")
+        #     # validation step
+        #     val_step_loss, val_step_acc = self.val_step()
+        #     self.logger.log(f"val_step_loss: {val_step_loss} | val_step_acc = {val_step_acc}")
 
-            # append epoch's metrics
-            self.train_losses.append(train_step_loss)
-            self.train_accs.append(train_step_acc)
-            self.val_losses.append(val_step_loss)
-            self.val_accs.append(val_step_acc)
+        #     # append epoch's metrics
+        #     self.train_losses.append(train_step_loss)
+        #     self.train_accs.append(train_step_acc)
+        #     self.val_losses.append(val_step_loss)
+        #     self.val_accs.append(val_step_acc)
 
-            # save the best model
-            if val_step_acc > self.best_acc:
-                self.best_acc = val_step_acc
-                torch.save(self.model.state_dict(), f"saved_models/best_model_{self.cfg['exp_id']}.pt")
-                self.logger.log("New model saved")
+        #     # save the best model
+        #     if val_step_acc > self.best_acc:
+        #         self.best_acc = val_step_acc
+        #         torch.save(self.model.state_dict(), f"saved_models/best_model_{self.cfg['exp_id']}.pt")
+        #         self.logger.log("New model saved")
             
-            # save the last model
-            torch.save(self.model.state_dict(), f"saved_models/last_model_{self.cfg['exp_id']}.pt")
+        #     # save the last model
+        #     torch.save(self.model.state_dict(), f"saved_models/last_model_{self.cfg['exp_id']}.pt")
 
-        # plot metrics
-        self.plot()
+        # # plot metrics
+        # self.plot()
 
     def train_step(self):
         # train step method
@@ -182,7 +182,6 @@ class Trainer():
         return val_step_loss, val_step_acc
 
     def test_step(self):
-        self.loss_fn = nn.CrossEntropyLoss()
         # test step
 
         # read the sample submission
