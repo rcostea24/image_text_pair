@@ -182,6 +182,7 @@ class Trainer():
         return val_step_loss, val_step_acc
 
     def test_step(self):
+        self.loss_fn = nn.CrossEntropyLoss()
         # test step
 
         # read the sample submission
