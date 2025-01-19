@@ -271,7 +271,7 @@ class Trainer():
 
         # plot the confusion matrix
         plt.figure(figsize=(10, 7))
-        sns.heatmap(conf_matrix, annot=True)
+        sns.heatmap(conf_matrix, annot=True, fmt="d", cmap="Blues", xticklabels=True, yticklabels=True)
         plt.title(f"Confusion Matrix Experiment {self.cfg['exp_id']}")
         plt.xlabel("Predicted")
         plt.ylabel("Ground Truth")
