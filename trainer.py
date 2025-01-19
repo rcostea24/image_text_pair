@@ -244,7 +244,7 @@ class Trainer():
                     labels = labels.view(labels.shape[0], 1).type(torch.float32)
 
                 # forward pass
-                outputs = self.model(img_inputs, txt_input)
+                outputs = self.best_model(img_inputs, txt_input)
 
                 # apply softmax if the output is from multiclass classification
                 if str(type(self.loss_fn)) == "<class 'torch.nn.modules.loss.CrossEntropyLoss'>":
