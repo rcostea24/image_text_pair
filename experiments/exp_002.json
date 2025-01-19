@@ -7,7 +7,7 @@
     "loss_fn": "CrossEntropyLoss",
     "vision_params": {
         "model_type": "cnn",
-        "img_size": [224, 224],
+        "img_size": [224, 224]
     },
     "language_params": {
         "model_type": "lstm",
