@@ -6,6 +6,8 @@ import torch.nn as nn
 from model import Model
 from tqdm.notebook import tqdm
 import matplotlib.pyplot as plt
+from sklearn.metrics import confusion_matrix
+import seaborn as sns
 
 class Trainer():
     # trainer class
@@ -230,6 +232,9 @@ class Trainer():
         correct_preds = 0.0
         total_preds = 0
 
+        all_labels = []
+        all_predictions = []
+
        # disable gradient computation
         with torch.no_grad():
             for img_inputs, txt_input, labels in tqdm(self.val_loader):
@@ -255,7 +260,23 @@ class Trainer():
                 correct_preds += torch.sum(predictions == labels).item()
                 total_preds += labels.shape[0]
 
+                # store predictions and labels for confusion matrix
+                all_predictions.extend(predictions.cpu().numpy())
+                all_labels.extend(labels.cpu().numpy())
+
         self.logger.log(f"Validation accuracy with best model: {correct_preds / total_preds}")
+
+        # compute confusion matrix
+        conf_matrix = confusion_matrix(all_labels, all_predictions)
+
+        # plot the confusion matrix
+        plt.figure(figsize=(10, 7))
+        sns.heatmap(conf_matrix, annot=True)
+        plt.title(f"Confusion Matrix Experiment {self.cfg["exp_id"]}")
+        plt.xlabel("Predicted")
+        plt.ylabel("Ground Truth")
+        plt.savefig(f"figures/{self.cfg['exp_id']}_cm.jpg")
+        plt.close()
         
 
     def plot(self):
